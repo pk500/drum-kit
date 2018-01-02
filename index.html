@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JS Drum Kit</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>   
+    <div class="keys">
+        <div data-key="65" class="key">
+            <kbd>A</kbd>
+            <span class="sound">clap</span>
+        </div>
+        <div data-key="83" class="key">
+            <kbd>S</kbd>
+            <span class="sound">hihat</span>
+        </div>
+        <div data-key="68" class="key">
+            <kbd>D</kbd>
+            <span class="sound">kick</span>
+        </div>
+        <div data-key="70" class="key">
+            <kbd>F</kbd>
+            <span class="sound">openhat</span>
+        </div>
+        <div data-key="71" class="key">
+            <kbd>G</kbd>
+            <span class="sound">boom</span>
+        </div>
+        <div data-key="72" class="key">
+            <kbd>H</kbd>
+            <span class="sound">ride</span>
+        </div>
+        <div data-key="74" class="key">
+            <kbd>J</kbd>
+            <span class="sound">snare</span>
+        </div>
+        <div data-key="75" class="key">
+            <kbd>K</kbd>
+            <span class="sound">tom</span>
+        </div>
+        <div data-key="76" class="key">
+            <kbd>L</kbd>
+            <span class="sound">tink</span>
+        </div>
+        
+    </div>
+
+    
+    <audio data-key="65" src="soundsw/SOR KFR3 Loop KIT 127 170.wav"></audio>
+    <audio data-key="83" src="soundsw/SOR KFR3 Loop LPerc 127 016.wav"></audio>
+    <audio data-key="68" src="soundsw/SOR KFR3 Loop Min 127 005.wav"></audio>
+    <audio data-key="70" src="soundsw/SOR KFR3 Loop KIT 127 170.wav"></audio>
+    <audio data-key="71" src="soundsw/SOR KFR3 Loop KIT 127 170.wav"></audio>
+    <audio data-key="72" src="soundsw/SOR KFR3 Loop KIT 127 170.wav"></audio>
+    <audio data-key="74" src="soundsw/SOR KFR3 Loop KIT 127 170.wav"></audio>
+    <audio data-key="75" src="soundsw/SOR KFR3 Loop KIT 127 170.wav"></audio>
+    <audio data-key="76" src="soundsw/SOR KFR3 Loop KIT 127 170.wav"></audio>
+   <!--
+
+   <audio data-key="65" src="sounds/clap.wav"></audio>
+   <audio data-key="83" src="sounds/hihat.wav"></audio>
+   <audio data-key="68" src="sounds/kick.wav"></audio>
+   <audio data-key="70" src="sounds/openhat.wav"></audio>
+   <audio data-key="71" src="sounds/boom.wav"></audio>
+   <audio data-key="72" src="sounds/ride.wav"></audio>
+   <audio data-key="74" src="sounds/snare.wav"></audio>
+   <audio data-key="75" src="sounds/tom.wav"></audio>
+   <audio data-key="76" src="sounds/tink.wav"></audio>
+   -->
+<script>
+
+        function playSound(e) {
+            console.log(e); // -> KeyboardEvent {isTrusted: true, key: "s", code: "KeyS", location: 0, ctrlKey: false…}
+    
+            // check if pressed key has associated audio/key
+            var key = document.querySelector(`.key[data-key="${e.keyCode}"]`); // TODO: i don't understand the quotation marks
+            var audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    
+            // if not, ignore this key
+            if (!audio) return;
+    
+            // if it has:
+                // 1 - add class playing for style modification
+                // 2 - reset audio, so we can play again before it finished
+                // 3 - play that sound
+            key.classList.add('playing'); // 1
+            audio.currentTime = 0;        // 2
+            audio.play();                 // 3
+        };
+    
+    
+    
+    
+    
+        // add support for click. There is code repetition, but I won't play with this now just yet. It's too soon.
+        function clickToPlay(e) {
+            // extract keyCode from data-key attribute
+            var keyCode = this.getAttribute('data-key');
+            
+            // check if there is associated audio
+            var audio = document.querySelector(`audio[data-key="${keyCode}"]`);
+            
+            // if not, ignore this key
+            if (!audio) return;
+    
+            // if there is:
+                // 1 - add class playing for style modification
+                // 2 - reset audio, so we can play again before it finished
+                // 3 - play that sound
+            this.classList.add('playing'); // 1
+            audio.currentTime = 0;        // 2
+            audio.play();                 // 3
+        }
+    
+    
+    
+    
+    
+        function removeTransition(e) {
+            if (e.propertyName !== 'transform') return;
+            e.target.classList.remove('playing');
+            // this.classList.remove('playing'); // also working
+        }
+    
+        // build an array of keys
+        const keys = Array.from(document.querySelectorAll('.key'));
+        // assign event listener to all of them. This event listener would then call removeTransition function
+        keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+    
+        // add support for click
+        keys.forEach(key => key.addEventListener('click', clickToPlay));
+        window.addEventListener('keydown', playSound);
+    
+    
+    
+    
+        // my custom navigation, build with that I learned today
+       /* function navigate(e) {
+            e.preventDefault();
+            console.log("which: " + e.which);
+    
+            var key = document.querySelector(`.jena-nav[data-key="${e.keyCode}"]`);
+    
+            if (!key) return;
+            
+            key.classList.add('is-active');
+            key.click();
+        }
+        
+        window.addEventListener('keydown', navigate);*/
+    
+    </script>
+    
+
+</body>
+
+</html>
